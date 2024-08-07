@@ -21,3 +21,5 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::view('preguntas-frecuentes', 'faqs');

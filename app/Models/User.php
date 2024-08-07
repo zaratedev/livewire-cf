@@ -5,7 +5,9 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -19,6 +21,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'avatar',
         'password',
         'phone',
         'birthday',
@@ -47,5 +50,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getPhotoAttribute()
+    {
+        if (is_null($this->avatar)) {
+            return asset('images/cody.jpg');
+        }
+
+        return Storage::url($this->avatar);
+    }
+
+    public function updateProfilePhoto(UploadedFile $photo)
+    {
+        // $this->avatar = image.png
+        tap($this->avatar, function ($previous) use ($photo) {
+            // $previous = 'image.png';
+            $this->forceFill([
+                'avatar' => $photo->store('avatars', ['disk' => 'public'])
+            ]);
+
+            // $this->avatar = 'nueva-image.png';
+            if($previous) {
+                Storage::disk('public')->delete($previous);
+            }
+        });
     }
 }
