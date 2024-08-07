@@ -26,3 +26,6 @@ Route::view('preguntas-frecuentes', 'faqs');
 Route::view('lista-tareas', 'todo-list');
 
 Route::view('pikaday', 'pikaday-example');
+
+Route::view('contador-volt', 'counter');
+Route::view('newsletter', 'newsletter-example');
